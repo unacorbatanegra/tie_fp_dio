@@ -1,8 +1,8 @@
 name: tie_fp_dio
 description: Extension to Dio Response
 version: 0.0.1
-homepage: github.com/unacorbatanegra/tie_fp_dio
-publish_to: none
+homepage: https://github.com/unacorbatanegra/tie_fp_dio
+
 
 environment:
   sdk: '>=3.0.1 <4.0.0'
