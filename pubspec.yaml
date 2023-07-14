@@ -1,24 +1,19 @@
 name: tie_fp_dio
 description: Extension to Dio Response
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/unacorbatanegra/tie_fp_dio
-
+issue_tracker: https://github.com/unacorbatanegra/tie_fp_dio/issues
 
 environment:
-  sdk: '>=3.0.1 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   dio: ^5.2.1+1
-  
+
   flutter:
     sdk: flutter
-  tie_fp: ^0.0.1
+  tie_fp: ^0.0.5
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^2.0.0
-
-flutter:
-
+  lints: ^2.0.1
+  test: ^1.23.1

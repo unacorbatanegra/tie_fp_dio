@@ -10,5 +10,5 @@ abstract class ApiSerializer {
     serializerMap[J] = fromJson;
   }
 
-  static FromJson? get<J>() => serializerMap[J];
+  static FromJson<J>? get<J>() => serializerMap[J] as FromJson<J>?;
 }
