@@ -29,7 +29,7 @@ extension ToResult<T> on Response {
   Result<T> toResult() => fromDioResponse<T>(this);
 }
 
-extension ToResultFuture<T> on Future<Response> {
-  Future<Result<T>> toResult([FromJson<T>? serializer]) async =>
+extension ToResultFuture on Future<Response> {
+  Future<Result<T>> toResult<T>([FromJson<T>? serializer]) async =>
       fromDioResponse<T>(await this, serializer: serializer);
 }
