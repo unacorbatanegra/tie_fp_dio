@@ -10,8 +10,6 @@ environment:
 dependencies:
   dio: ^5.2.1+1
 
-  flutter:
-    sdk: flutter
   tie_fp: ^0.0.5
 
 dev_dependencies:
