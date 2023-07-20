@@ -1,4 +1,4 @@
-[![Pub Package](https://img.shields.io/pub/v/tie_dio.svg)](https://pub.dev/packages/tie_fp_dio)
+[![Pub Package](https://img.shields.io/pub/v/tie_fp_dio.svg)](https://pub.dev/packages/tie_fp_dio)
 
 # Tie FP Dio
 
