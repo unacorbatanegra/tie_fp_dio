@@ -22,14 +22,33 @@ Result<T> fromDioResponse<T>(
   if (serializer == null) {
     throw 'serializer not found';
   }
-  return Success(serializer(body));
+  try {
+    final v = serializer(body);
+    return Success(v);
+  } catch (e, s) {
+    return Failure(e, s);
+  }
 }
 
 extension ToResult<T> on Response {
   Result<T> toResult() => fromDioResponse<T>(this);
 }
 
-extension ToResultFuture on Future<Response> {
-  Future<Result<T>> toResult<T>([FromJson<T>? serializer]) async =>
-      fromDioResponse<T>(await this, serializer: serializer);
+extension ToResultFuture<J> on Future<Response<J>> {
+  Future<Result<T>> toResult<T>({
+    FromJson<T>? serializer,
+    bool Function(Response resp)? isError,
+    E Function<E>(Response parseError)? parseError,
+  }) async {
+    try {
+      return fromDioResponse<T>(
+        await this,
+        serializer: serializer,
+        isError: isError,
+        parseError: parseError,
+      );
+    } catch (e, s) {
+      return Failure(e, s);
+    }
+  }
 }
