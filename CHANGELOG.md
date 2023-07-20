@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Add `DioException` missing support
+
 ## 0.0.3
 
 * Change type parameter to local
