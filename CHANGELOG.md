@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Add `toResultList()` support
+
 ## 0.0.4
 
 * Add `DioException` missing support

@@ -21,6 +21,15 @@ void main() async {
     ),
   );
   dioAdapter.onGet(
+    '/list',
+    (server) => server.reply(
+      200,
+      List.generate(10, (index) => {'message': 'Success!', 'result': false}),
+      // Reply would wait for one-sec before returning data.
+      delay: const Duration(seconds: 1),
+    ),
+  );
+  dioAdapter.onGet(
     '/exception',
     (server) => server.reply(
       400,
@@ -59,6 +68,13 @@ void main() async {
           );
       expect(result, isA<Result<Model>>());
       expect(result.isError(), true);
+    });
+    test('Test list serialization', () async {
+      final result = await dio.get('/list').toResultList<Model>(
+            serializer: Model.fromMap,
+          );
+      expect(result, isA<Result<List<Model>>>());
+      expect(result.isError(), false);
     });
   });
 }

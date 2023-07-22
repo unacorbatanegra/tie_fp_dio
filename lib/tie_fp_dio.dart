@@ -18,15 +18,47 @@ Result<T> fromDioResponse<T>(
     return Failure(response.statusMessage);
   }
   final body = response.data;
+  if (body is! Map) {
+    throw 'body is not list, use toResult() instead';
+  }
+  serializer ??= ApiSerializer.get<T>();
+  if (serializer == null) {
+    throw 'serializer not found';
+  }
+
+  try {
+    final v = serializer(body as Map<String, dynamic>);
+    return Success(v);
+  } catch (exception, stackTrace) {
+    return Failure(exception, stackTrace);
+  }
+}
+
+Result<List<T>> fromDioResponseList<T>(
+  Response response, {
+  FromJson<T>? serializer,
+  bool Function(Response resp)? isError,
+  E Function<E>(Response parseError)? parseError,
+}) {
+  if (isError?.call(response) ?? false) {
+    return Failure(parseError?.call(response));
+  }
+  if ((response.statusCode ?? 500) >= 400) {
+    return Failure(response.statusMessage);
+  }
+  final body = response.data;
+  if (body is! List) {
+    throw 'body is not list, use toResult() instead';
+  }
   serializer ??= ApiSerializer.get<T>();
   if (serializer == null) {
     throw 'serializer not found';
   }
   try {
-    final v = serializer(body);
-    return Success(v);
-  } catch (e, s) {
-    return Failure(e, s);
+    final value = body.map((e) => serializer!(e)).toList();
+    return Success(value);
+  } catch (exception, stackTrace) {
+    return Failure(exception, stackTrace);
   }
 }
 
@@ -42,6 +74,23 @@ extension ToResultFuture<J> on Future<Response<J>> {
   }) async {
     try {
       return fromDioResponse<T>(
+        await this,
+        serializer: serializer,
+        isError: isError,
+        parseError: parseError,
+      );
+    } catch (e, s) {
+      return Failure(e, s);
+    }
+  }
+
+  Future<Result<List<T>>> toResultList<T>({
+    FromJson<T>? serializer,
+    bool Function(Response resp)? isError,
+    E Function<E>(Response parseError)? parseError,
+  }) async {
+    try {
+      return fromDioResponseList<T>(
         await this,
         serializer: serializer,
         isError: isError,
