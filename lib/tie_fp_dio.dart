@@ -22,7 +22,7 @@ Result<T> fromDioResponse<T>(
   if (body is! Map) {
     throw 'body is not Map, use toResultList() instead';
   }
-  serializer = ApiSerializer.get<T>() ?? (json) => json as T;
+  serializer ??= ApiSerializer.get<T>() ?? (json) => json as T;
 
   getOriginalResponse?.call(response);
 
