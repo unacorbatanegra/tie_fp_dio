@@ -10,6 +10,7 @@ Result<T> fromDioResponse<T>(
   FromJson<T>? serializer,
   bool Function(Response resp)? isError,
   E Function<E>(Response parseError)? parseError,
+  void Function(Response resp)? getOriginalResponse,
 }) {
   if (isError?.call(response) ?? false) {
     return Failure(parseError?.call(response));
@@ -19,13 +20,13 @@ Result<T> fromDioResponse<T>(
   }
   final body = response.data;
   if (body is! Map) {
-    throw 'body is not list, use toResult() instead';
+    throw 'body is not Map, use toResultList() instead';
   }
   serializer ??= ApiSerializer.get<T>();
   if (serializer == null) {
     throw 'serializer not found';
   }
-
+  getOriginalResponse?.call(response);
   try {
     final v = serializer(body as Map<String, dynamic>);
     return Success(v);
@@ -39,6 +40,7 @@ Result<List<T>> fromDioResponseList<T>(
   FromJson<T>? serializer,
   bool Function(Response resp)? isError,
   E Function<E>(Response parseError)? parseError,
+  void Function(Response resp)? getOriginalResponse,
 }) {
   if (isError?.call(response) ?? false) {
     return Failure(parseError?.call(response));
@@ -54,6 +56,7 @@ Result<List<T>> fromDioResponseList<T>(
   if (serializer == null) {
     throw 'serializer not found';
   }
+  getOriginalResponse?.call(response);
   try {
     final value = body.map((e) => serializer!(e)).toList();
     return Success(value);
@@ -71,6 +74,7 @@ extension ToResultFuture<J> on Future<Response<J>> {
     FromJson<T>? serializer,
     bool Function(Response resp)? isError,
     E Function<E>(Response parseError)? parseError,
+    void Function(Response resp)? getOriginalResponse,
   }) async {
     try {
       return fromDioResponse<T>(
@@ -88,6 +92,7 @@ extension ToResultFuture<J> on Future<Response<J>> {
     FromJson<T>? serializer,
     bool Function(Response resp)? isError,
     E Function<E>(Response parseError)? parseError,
+    void Function(Response resp)? getOriginalResponse,
   }) async {
     try {
       return fromDioResponseList<T>(
@@ -95,6 +100,7 @@ extension ToResultFuture<J> on Future<Response<J>> {
         serializer: serializer,
         isError: isError,
         parseError: parseError,
+        getOriginalResponse: getOriginalResponse,
       );
     } catch (e, s) {
       return Failure(e, s);

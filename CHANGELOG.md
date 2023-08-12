@@ -1,3 +1,7 @@
+## 0.0.6
+
+* Add `getOriginalResponse()` callback
+
 ## 0.0.5
 
 * Add `toResultList()` support
