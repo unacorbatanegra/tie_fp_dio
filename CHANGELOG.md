@@ -1,3 +1,7 @@
+## 0.0.7
+
+* Add default serializer callback for unique results
+
 ## 0.0.6
 
 * Add `getOriginalResponse()` callback

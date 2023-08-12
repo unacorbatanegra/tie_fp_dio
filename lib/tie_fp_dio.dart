@@ -22,11 +22,10 @@ Result<T> fromDioResponse<T>(
   if (body is! Map) {
     throw 'body is not Map, use toResultList() instead';
   }
-  serializer ??= ApiSerializer.get<T>();
-  if (serializer == null) {
-    throw 'serializer not found';
-  }
+  serializer = ApiSerializer.get<T>() ?? (json) => json as T;
+
   getOriginalResponse?.call(response);
+
   try {
     final v = serializer(body as Map<String, dynamic>);
     return Success(v);
