@@ -52,12 +52,20 @@ Result<List<T>> fromDioResponseList<T>(
     throw 'body is not list, use toResult() instead';
   }
   serializer ??= ApiSerializer.get<T>();
-  if (serializer == null) {
-    throw 'serializer not found';
-  }
   getOriginalResponse?.call(response);
   try {
-    final value = body.map((e) => serializer!(e)).toList();
+    final value = body.map(
+      (e) {
+        if (e is T) {
+          return e;
+        }
+        if (serializer == null) {
+          throw 'serializer not found';
+        }
+        return serializer(e);
+      },
+    ).toList();
+
     return Success(value);
   } catch (exception, stackTrace) {
     return Failure(exception, stackTrace);

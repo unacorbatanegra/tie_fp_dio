@@ -1,3 +1,7 @@
+## 0.0.9
+
+* Add list of primitive support
+
 ## 0.0.8
 
 * 0.0.7 regresion

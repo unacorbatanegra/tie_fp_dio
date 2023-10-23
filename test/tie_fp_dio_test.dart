@@ -38,6 +38,15 @@ void main() async {
       delay: const Duration(seconds: 1),
     ),
   );
+  dioAdapter.onGet(
+    '/listString',
+    (server) => server.reply(
+      200,
+      List.generate(10, (index) => '$index'),
+      // Reply would wait for one-sec before returning data.
+      delay: const Duration(seconds: 1),
+    ),
+  );
   setUp(() {
     dio.httpClientAdapter = dioAdapter;
     dio.options.baseUrl = baseUrl;
@@ -74,6 +83,11 @@ void main() async {
             serializer: Model.fromMap,
           );
       expect(result, isA<Result<List<Model>>>());
+      expect(result.isError(), false);
+    });
+    test('Test list of string', () async {
+      final result = await dio.get('/listString').toResultList<String>();
+      expect(result, isA<Result<List<String>>>());
       expect(result.isError(), false);
     });
   });
