@@ -1,6 +1,6 @@
 name: tie_fp_dio
 description: Extension to Dio Response
-version: 0.0.9
+version: 1.0.0
 homepage: https://github.com/unacorbatanegra/tie_fp_dio
 issue_tracker: https://github.com/unacorbatanegra/tie_fp_dio/issues
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   dio: ^5.2.1+1
 
-  tie_fp: ^0.0.5
+  tie_fp: ^1.0.0
 
 dev_dependencies:
   http_mock_adapter: ^0.4.4

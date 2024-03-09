@@ -1,3 +1,9 @@
+## 1.0.0
+
+* Fix Future error
+* Remove throwing when not serializer
+* Disable `Failure` when status code is greater than 400
+
 ## 0.0.9
 
 * Add list of primitive support

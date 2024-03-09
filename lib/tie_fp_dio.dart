@@ -15,9 +15,9 @@ Result<T> fromDioResponse<T>(
   if (isError?.call(response) ?? false) {
     return Failure(parseError?.call(response));
   }
-  if ((response.statusCode ?? 500) >= 400) {
-    return Failure(response.statusMessage);
-  }
+  // if ((response.statusCode ?? 500) >= 400) {
+  //   return Failure(response.statusMessage);
+  // }
   final body = response.data;
   if (body is! Map) {
     throw 'body is not Map, use toResultList() instead';
@@ -27,7 +27,7 @@ Result<T> fromDioResponse<T>(
   getOriginalResponse?.call(response);
 
   try {
-    final v = serializer(body as Map<String, dynamic>);
+    final v = serializer(Map<String, dynamic>.from(body));
     return Success(v);
   } catch (exception, stackTrace) {
     return Failure(exception, stackTrace);
@@ -44,14 +44,14 @@ Result<List<T>> fromDioResponseList<T>(
   if (isError?.call(response) ?? false) {
     return Failure(parseError?.call(response));
   }
-  if ((response.statusCode ?? 500) >= 400) {
-    return Failure(response.statusMessage);
-  }
+  // if ((response.statusCode ?? 500) >= 400) {
+  //   return Failure(response.statusMessage);
+  // }
   final body = response.data;
   if (body is! List) {
     throw 'body is not list, use toResult() instead';
   }
-  serializer ??= ApiSerializer.get<T>();
+  serializer ??= ApiSerializer.get<T>() ?? (json) => json as T;
   getOriginalResponse?.call(response);
   try {
     final value = body.map(
@@ -84,11 +84,12 @@ extension ToResultFuture<J> on Future<Response<J>> {
     void Function(Response resp)? getOriginalResponse,
   }) async {
     try {
-      return fromDioResponse<T>(
+      return fromDioResponse(
         await this,
         serializer: serializer,
         isError: isError,
         parseError: parseError,
+        getOriginalResponse: getOriginalResponse,
       );
     } catch (e, s) {
       return Failure(e, s);
@@ -102,7 +103,7 @@ extension ToResultFuture<J> on Future<Response<J>> {
     void Function(Response resp)? getOriginalResponse,
   }) async {
     try {
-      return fromDioResponseList<T>(
+      return fromDioResponseList(
         await this,
         serializer: serializer,
         isError: isError,

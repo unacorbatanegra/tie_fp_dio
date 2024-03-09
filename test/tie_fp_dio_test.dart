@@ -90,6 +90,16 @@ void main() async {
       expect(result, isA<Result<List<String>>>());
       expect(result.isError(), false);
     });
+    test('Test original response', () async {
+      final result = await dio.get('/test').toResult();
+      expect(result, isA<Result>());
+      expect(result.isError(), false);
+    });
+    test('Test original response list', () async {
+      final result = await dio.get('/list').toResultList();
+      expect(result, isA<Result>());
+      expect(result.isError(), false);
+    });
   });
 }
 
