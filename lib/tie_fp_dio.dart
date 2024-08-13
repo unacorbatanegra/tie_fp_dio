@@ -11,6 +11,7 @@ Result<T> fromDioResponse<T>(
   bool Function(Response resp)? isError,
   E Function<E>(Response parseError)? parseError,
   void Function(Response resp)? getOriginalResponse,
+  bool report = true,
 }) {
   if (isError?.call(response) ?? false) {
     return Failure(parseError?.call(response));
@@ -30,7 +31,7 @@ Result<T> fromDioResponse<T>(
     final v = serializer(Map<String, dynamic>.from(body));
     return Success(v);
   } catch (exception, stackTrace) {
-    return Failure(exception, stackTrace);
+    return Failure(exception, stackTrace: stackTrace, report: report);
   }
 }
 
@@ -40,6 +41,7 @@ Result<List<T>> fromDioResponseList<T>(
   bool Function(Response resp)? isError,
   E Function<E>(Response parseError)? parseError,
   void Function(Response resp)? getOriginalResponse,
+  bool report = true,
 }) {
   if (isError?.call(response) ?? false) {
     return Failure(parseError?.call(response));
@@ -68,7 +70,7 @@ Result<List<T>> fromDioResponseList<T>(
 
     return Success(value);
   } catch (exception, stackTrace) {
-    return Failure(exception, stackTrace);
+    return Failure(exception, stackTrace: stackTrace, report: report);
   }
 }
 
@@ -82,6 +84,7 @@ extension ToResultFuture<J> on Future<Response<J>> {
     bool Function(Response resp)? isError,
     E Function<E>(Response parseError)? parseError,
     void Function(Response resp)? getOriginalResponse,
+    bool report = true,
   }) async {
     try {
       return fromDioResponse(
@@ -90,9 +93,10 @@ extension ToResultFuture<J> on Future<Response<J>> {
         isError: isError,
         parseError: parseError,
         getOriginalResponse: getOriginalResponse,
+        report: report,
       );
     } catch (e, s) {
-      return Failure(e, s);
+      return Failure(e, stackTrace: s, report: report);
     }
   }
 
@@ -101,6 +105,7 @@ extension ToResultFuture<J> on Future<Response<J>> {
     bool Function(Response resp)? isError,
     E Function<E>(Response parseError)? parseError,
     void Function(Response resp)? getOriginalResponse,
+    bool report = true,
   }) async {
     try {
       return fromDioResponseList(
@@ -109,9 +114,10 @@ extension ToResultFuture<J> on Future<Response<J>> {
         isError: isError,
         parseError: parseError,
         getOriginalResponse: getOriginalResponse,
+        report: report,
       );
     } catch (e, s) {
-      return Failure(e, s);
+      return Failure(e, stackTrace: s, report: report);
     }
   }
 }
